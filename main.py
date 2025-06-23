@@ -2,13 +2,14 @@ import requests
 import redis
 from redis.cache import CacheConfig
 class WeatherData:
-    def __init__(self,country,temp,day):
+    def __init__(self, day, country, temp, description):
+        self.day = day
         self.country = country
         self.temp = temp
-        self.day = day
+        self.description = description
         
     def __str__(self):
-        return f"\nCity / Country: {self.country}\nTemperature (Celcius): {self.temp}\nDay: {self.day}\n"
+        return f"\nDay: {self.day}\nCity / Country: {self.country}\nTemperature (Celcius): {self.temp}\nDesc: {self.description}\n"
 
 def get_api():
     place = input("Enter Address, partial address, or lat,lon: ")
@@ -18,7 +19,7 @@ def get_api():
         response = requests.get(api_link)
         data = response.json()
     
-        weather_data = WeatherData(data["resolvedAddress"], data["days"][0]["temp"], data["days"][0]["datetime"])
+        weather_data = WeatherData(data["days"][0]["datetime"], data["days"][1]["description"], data["resolvedAddress"], data["days"][0]["temp"])
         return weather_data
     except:
         return f"Connection Error {response.status_code}"
